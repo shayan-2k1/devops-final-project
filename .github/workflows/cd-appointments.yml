@@ -1,0 +1,99 @@
+name: CD
+
+on:
+  push:
+    paths:
+    - 'appointments/**'
+    branches:
+      - main
+
+jobs:
+  Build-and-Deploy:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    name: Build and Push Image to Image registry
+    env:
+      REGISTRY: docker.io
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Set up Python 3.10
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' 
+
+    - name: Check out code into the appointments directory
+      uses: actions/checkout@v4
+
+    - name: Build Code
+      run: |
+        python3 app.py
+    
+    - name: Generate Version
+      id: generate_version
+      uses: anothrNick/github-tag-action@1.67.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+        DRY_RUN: true
+        DEFAULT_BUMP: "patch"
+        
+    - name: Generate Vars
+      id: generate_vars
+      run: |
+        IMAGE_TAG=${{ steps.generate_version.outputs.new_tag }}
+        # Just Image name
+        IMAGE_NAME=appointments-microservice
+        #Image ID= Name + Tag
+        IMAGE_ID=$IMAGE_NAME:$IMAGE_TAG
+        IMAGE_REPO=msk2k1/$IMAGE_NAME
+        echo "Image: $IMAGE_REPO"
+        echo "image=$IMAGE_REPO" >>$GITHUB_OUTPUT
+        echo "image_name=$IMAGE_NAME" >>$GITHUB_OUTPUT
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3.0.0
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3.0.0
+    - name: Login to DockerHub
+      uses: docker/login-action@v3.0.0
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+    
+    - name: Echo Output
+      run: |
+        echo "Image from Output: ${{ steps.generate_vars.outputs.image }}"
+        echo "Repo from Output: ${{ steps.generate_vars.outputs.image_name }}"
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v5.0.0
+      with:
+        context: ./appointments
+        file: ./Dockerfile
+        pull: true
+        push: true
+        tags: ${{ steps.generate_vars.outputs.image }}
+
+    - name: Push tag
+      uses: anothrNick/github-tag-action@1.67.0
+      id: tag_version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+        DEFAULT_BUMP: "patch"
+
+    - name: Create a GitHub release
+      id: 'github_release'
+      uses: ncipollo/release-action@v1.13.0
+      with:
+        tag: ${{ steps.tag_version.outputs.new_tag }}
+        name: ${{ steps.tag_version.outputs.new_tag }}
+        generateReleaseNotes: true
+
+    # - name: Deploy
+    #   uses: steebchen/kubectl@v2.0.0
+    #   with:
+    #     config: ${{ secrets.KUBE_CONFIG }}
+    #     command: set image -n prod deployment/golang-deployment golang=${{ env.IMAGE }}
