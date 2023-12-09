@@ -66,8 +66,8 @@ jobs:
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v5.0.0
       with:
-        context: ./appointments
-        file: ./Dockerfile
+        context: .
+        file: ./appointments/Dockerfile
         pull: true
         push: true
         tags: ${{ steps.generate_vars.outputs.image }}
