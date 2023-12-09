@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  appointments:
+    # build: 
+    #   context: appointments/
+    #   dockerfile: Dockerfile
+    image: msk2k1/appointments-microservice:1.0.0
+    init: true
+    deploy:
+      replicas: 1
+    networks:
+      - application
+
+  doctors:
+    # build: 
+    #   context: doctors/
+    #   dockerfile: Dockerfile
+    image: msk2k1/doctors-microservice:1.0.0
+    init: true
+    deploy:
+      replicas: 1
+    networks:
+      - application
+
+  frontend:
+    # build: 
+    #   context: frontend/
+    #   dockerfile: Dockerfile
+    image: msk2k1/frontend-microservice:1.0.0
+    init: true
+    environment:
+      APPOINTMENTS_SERVICE_URL: appointments:7070
+      DOCTORS_SERVICE_URL: doctors:9090
+    deploy:
+      replicas: 1
+    networks:
+      - application
+    ports:
+      - 3001:3000
+    depends_on:
+      - appointments
+      - doctors
+networks:
+  application:
+    name: application
+    
