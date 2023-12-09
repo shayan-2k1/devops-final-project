@@ -40,10 +40,11 @@ jobs:
       run: |
         IMAGE_TAG=${{ steps.generate_version.outputs.new_tag }}
         # Just Image name
-        IMAGE_NAME={appointments-microservice}
+        IMAGE_NAME=appointments-microservice
         #Image ID= Name + Tag
         IMAGE_ID=$IMAGE_NAME:$IMAGE_TAG
-        IMAGE_REPO=msk2k1/$IMAGE_ID
+        REGISTRY=msk2k1
+        IMAGE_REPO=$REGISTRY/$IMAGE_ID
         echo "Image: $IMAGE_REPO"
         echo "image=$IMAGE_REPO" >>$GITHUB_OUTPUT
         echo "image_name=$IMAGE_NAME" >>$GITHUB_OUTPUT
@@ -63,7 +64,6 @@ jobs:
       run: |
         echo "Image from Output: ${{ steps.generate_vars.outputs.image }}"
         echo "Repo from Output: ${{ steps.generate_vars.outputs.image_name }}"
-        echo "Repo from Output: ${{ steps.generate_vars.outputs.image_tag }}"
 
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v5.0.0
