@@ -28,7 +28,7 @@ jobs:
 
     - name: Build Code
       run: |
-        python3 app.py
+        python3 appointments/app.py
     
     - name: Generate Version
       id: generate_version
