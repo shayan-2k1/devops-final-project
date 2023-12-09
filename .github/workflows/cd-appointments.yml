@@ -45,8 +45,10 @@ jobs:
         IMAGE_ID=$IMAGE_NAME:$IMAGE_TAG
         IMAGE_REPO=msk2k1/$IMAGE_NAME
         echo "Image: $IMAGE_REPO"
-        echo "image=$IMAGE_ID" >>$GITHUB_OUTPUT
+        echo "image=$IMAGE_REPO" >>$GITHUB_OUTPUT
         echo "image_name=$IMAGE_NAME" >>$GITHUB_OUTPUT
+        echo "image_tag=$IMAGE_TAG" >>$GITHUB_OUTPUT
+        
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3.0.0
@@ -62,6 +64,7 @@ jobs:
       run: |
         echo "Image from Output: ${{ steps.generate_vars.outputs.image }}"
         echo "Repo from Output: ${{ steps.generate_vars.outputs.image_name }}"
+        echo "Repo from Output: ${{ steps.generate_vars.outputs.image_tag }}"
 
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v5.0.0
@@ -71,6 +74,7 @@ jobs:
         pull: true
         push: true
         tags: ${{ steps.generate_vars.outputs.image }}
+        tag: ${{ steps.generate_vars.outputs.image_tag}}
 
     - name: Push tag
       uses: anothrNick/github-tag-action@1.67.0
