@@ -43,7 +43,7 @@ jobs:
         IMAGE_NAME=${{ github.repository }}
         #Image ID= Name + Tag
         IMAGE_ID=$IMAGE_NAME:$IMAGE_TAG
-        IMAGE_REPO=$REGISTRY/$IMAGE_ID
+        IMAGE_REPO=msk2k1/$IMAGE_ID
         echo "Image: $IMAGE_REPO"
         echo "image=$IMAGE_REPO" >>$GITHUB_OUTPUT
         echo "image_name=$IMAGE_NAME" >>$GITHUB_OUTPUT
