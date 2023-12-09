@@ -25,10 +25,6 @@ jobs:
 
     - name: Check out code into the appointments directory
       uses: actions/checkout@v4
-
-    - name: Build Code
-      run: |
-        python3 appointments/app.py
     
     - name: Generate Version
       id: generate_version
