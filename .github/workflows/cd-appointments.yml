@@ -40,14 +40,13 @@ jobs:
       run: |
         IMAGE_TAG=${{ steps.generate_version.outputs.new_tag }}
         # Just Image name
-        IMAGE_NAME=appointments-microservice
+        IMAGE_NAME=${{ github.repository }}
         #Image ID= Name + Tag
         IMAGE_ID=$IMAGE_NAME:$IMAGE_TAG
-        IMAGE_REPO=msk2k1/$IMAGE_NAME
+        IMAGE_REPO=$REGISTRY/$IMAGE_ID
         echo "Image: $IMAGE_REPO"
         echo "image=$IMAGE_REPO" >>$GITHUB_OUTPUT
         echo "image_name=$IMAGE_NAME" >>$GITHUB_OUTPUT
-        echo "image_tag=$IMAGE_TAG" >>$GITHUB_OUTPUT
         
 
     - name: Set up QEMU
@@ -74,7 +73,6 @@ jobs:
         pull: true
         push: true
         tags: ${{ steps.generate_vars.outputs.image }}
-        tag: ${{ steps.generate_vars.outputs.image_tag}}
 
     - name: Push tag
       uses: anothrNick/github-tag-action@1.67.0
