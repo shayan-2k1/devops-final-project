@@ -21,7 +21,11 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: 18
-    
+
+
+    - name: Check out code into the frontend directory
+      uses: actions/checkout@v4
+
     - name: Generate Version
       id: generate_version
       uses: anothrNick/github-tag-action@1.67.0
