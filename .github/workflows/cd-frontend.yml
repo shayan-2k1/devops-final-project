@@ -68,8 +68,7 @@ jobs:
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v5.0.0
       with:
-        context: .
-        uses: actions/checkout@v4
+        context: ./frontend
         file: ./frontend/Dockerfile
         pull: true
         push: true
