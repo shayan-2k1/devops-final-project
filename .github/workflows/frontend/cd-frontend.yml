@@ -22,7 +22,7 @@ jobs:
       with:
         node-version: 18
 
-    - name: Check out code into the appointments directory
+    - name: Check out code into the frontend directory
       uses: actions/checkout@v4
     
     - name: Generate Version
