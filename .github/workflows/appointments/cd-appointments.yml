@@ -1,4 +1,4 @@
-name: CD
+name: CD-APPOINTMENTS
 
 on:
   push:
@@ -89,9 +89,3 @@ jobs:
         tag: ${{ steps.tag_version.outputs.new_tag }}
         name: ${{ steps.tag_version.outputs.new_tag }}
         generateReleaseNotes: true
-
-    # - name: Deploy
-    #   uses: steebchen/kubectl@v2.0.0
-    #   with:
-    #     config: ${{ secrets.KUBE_CONFIG }}
-    #     command: set image -n prod deployment/golang-deployment golang=${{ env.IMAGE }}
