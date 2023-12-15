@@ -2,9 +2,9 @@ FROM node:latest
 
 WORKDIR /frontend
 
-COPY package*.json ./
+COPY package.json ./
 
-RUN NODE_ENV=development npm i
+RUN npm install 
 
 COPY . . 
 
