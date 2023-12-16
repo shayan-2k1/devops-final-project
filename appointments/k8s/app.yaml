@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointments-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: backend
+      app: microservice
+  template:
+    metadata:
+      labels:
+        tier: backend
+        app: microservice
+    spec:
+      containers:
+      - name: appointments
+        image: msk2k1/appointments-microservice:1.0.0
+
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+            
+        ports:
+        - containerPort: 7070
+          name: tcp
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appointments
+spec:
+  selector:
+    tier: backend
+    app: microservice
+  ports:
+  - protocol: TCP
+    port: 7070
+    targetPort: 7070

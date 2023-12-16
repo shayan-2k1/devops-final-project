@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointments-liveness
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservice
+  template:
+    metadata:
+      labels:
+        app: microservice
+    spec:
+      containers:
+      - name: appointments-container
+        image: msk2k1/appointments-microservice:1.0.0
+        livenessProbe:
+          httpGet:
+            path: /appointments
+            port: 7070
+          initialDelaySeconds: 3
+          failureThreshold: 2
+          periodSeconds: 3

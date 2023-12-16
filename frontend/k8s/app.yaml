@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+      app: microservice
+  template:
+    metadata:
+      labels:
+        tier: frontend
+        app: microservice
+    spec:
+      containers:
+      - name: frontend
+        image: msk2k1/frontend-microservice:v1.0.2
+        
+        env:
+        - name: APPOINTMENTS_SERVICE_URL
+          value: appointments:7070
+
+        - name: DOCTORS_SERVICE_URL
+          value: doctors:9090
+
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+        ports:
+        - containerPort: 3000
+          name: tcp
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  type: NodePort
+  selector:
+    tier: frontend
+    app: microservice
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+    nodePort: 31000

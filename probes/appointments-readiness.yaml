@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointments-readiness
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservice
+  template:
+    metadata:
+      labels:
+        app: microservice
+    spec:
+      containers:
+      - name: appointments-container
+        image: msk2k1/appointments-microservice:1.0.0
+        ports:
+        - containerPort: 7070
+          name: tcp
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /appointments
+            port: 7070
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 3
+          successThreshold: 1
+          timeoutSeconds: 1
