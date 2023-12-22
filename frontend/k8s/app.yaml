@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: msk2k1/frontend-microservice:v1.0.2
+        image: msk2k1/frontend-microservice:1.0.0
         
         env:
         - name: APPOINTMENTS_SERVICE_URL
