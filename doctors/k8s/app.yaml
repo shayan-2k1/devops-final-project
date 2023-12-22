@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: doctors
-        image: msk2k1/doctors-microservice:v1.0.1
+        image: msk2k1/doctors-microservice:1.0.0
 
         resources:
           requests:
